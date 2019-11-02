@@ -1,16 +1,15 @@
 import feedparser
 import requests
 import re
-from configparser import ConfigParser
 from bs4 import BeautifulSoup
 import json
+from configparser import ConfigParser
 
 
 config_parser = ConfigParser()
 config_parser.read('config.ini')
 api = config_parser.get('Blogger API', 'API_KEY')
 blog_id = config_parser.get('Blogger API', 'blog_id')
-feed_file = config_parser.get('Blogger API', 'feed_file')
 
 
 #Returns 200 if a post is published.
