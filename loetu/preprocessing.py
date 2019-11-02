@@ -3,6 +3,7 @@ import requests
 import re
 from configparser import ConfigParser
 from bs4 import BeautifulSoup
+import json
 
 
 config_parser = ConfigParser()
@@ -40,7 +41,7 @@ def parse_feed(file):
     return posts
 
 
-#Clean post content of HTML. First remove all quotes, then remove HTML tags.
+#Clean post content of HTML. First remove all quotes, then remove HTML tags. Returns a dictionary with clean data.
 def remove_html_from_content(posts):
     for id in posts:
         soup = BeautifulSoup(posts[id]['content'], 'lxml')
@@ -50,3 +51,14 @@ def remove_html_from_content(posts):
         posts[id]['content'] = soup.text
     return posts
 
+
+#Serialize dictionary of posts to JSON.
+def serialize_to_json(posts, json_file):
+    with open(json_file, 'w', encoding='UTF-8') as outfile:
+        json.dump(posts, outfile, ensure_ascii=False)
+
+
+#Deserialize JSON file to a nested dictionary.
+def deserialize_to_dict(json_file):
+    with open(json_file, encoding='UTF-8') as input:
+        return json.load(input)
