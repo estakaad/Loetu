@@ -2,7 +2,7 @@ import feedparser
 import requests
 import re
 from configparser import ConfigParser
-
+from bs4 import BeautifulSoup
 
 config_parser = ConfigParser()
 config_parser.read('config.ini')
@@ -39,11 +39,23 @@ def parse_feed(file):
             if entry.category != 'http://schemas.google.com/blogger/2008/kind#comment':
                 id = re.search(r'\d*$', entry.id).group(0)
                 if check_if_post_is_published(blog_id, id, api):
-                    post = Post(entry.id, entry.author, entry.title, entry.content, entry.published)
+                    content = entry.content[0].get('value', default = '')
+                    post = Post(entry.id, entry.author, entry.title, content, entry.published)
                     posts.append(post)
+    return posts
+
+
+#Clean post content of HTML. First remove all quotes, then remove HTML tags.
+def remove_html_from_content(posts):
+    for post in posts:
+        soup = BeautifulSoup(post.content, 'lxml')
+        quotes = soup.find_all('blockquote')
+        for quote in quotes:
+            quote.decompose()
+        post.content = soup.text
     return posts
 
 
 posts = parse_feed(feed_file)
 
-print(len(posts))
+clean_posts = remove_html_from_content(posts)
