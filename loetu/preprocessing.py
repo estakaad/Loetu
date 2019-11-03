@@ -40,13 +40,21 @@ def parse_feed(file):
     return posts
 
 
-#Clean post content of HTML. First remove all quotes, then remove HTML tags. Returns a dictionary with clean data.
-def remove_html_from_content(posts):
+#Remove quotes from text. But is it really always necessary? They are quotes, not original content,
+#but they are still an integral part of the post content.
+def remove_quotes_from_content(posts):
     for id in posts:
         soup = BeautifulSoup(posts[id]['content'], 'lxml')
         quotes = soup.find_all('blockquote')
         for quote in quotes:
             quote.decompose()
+    return posts
+
+
+#Clean post content of HTML tags. Returns a dictionary with clean data.
+def remove_html_from_content(posts):
+    for id in posts:
+        soup = BeautifulSoup(posts[id]['content'], 'lxml')
         posts[id]['content'] = soup.text
     return posts
 
