@@ -69,3 +69,12 @@ def serialize_to_json(posts, json_file):
 def deserialize_to_dict(json_file):
     with open(json_file, encoding='UTF-8') as input:
         return json.load(input)
+
+
+#Merge the content of all posts to one string.
+def merge_content(dict):
+    text = ''
+    for i in dict.keys():
+        post_content = dict[i].get('content')
+        text += post_content
+    return text
