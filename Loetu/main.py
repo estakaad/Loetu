@@ -1,7 +1,7 @@
 import preprocessing
 from configparser import ConfigParser
-import analyze
-import visualize
+#import analyze
+#import visualize
 
 
 config_parser = ConfigParser()
